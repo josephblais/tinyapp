@@ -33,17 +33,15 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL] };
   res.render("urls_show", templateVars);
 });
 
-app.post('/urls', (req, res) => {
-  const shortURL = randomStr();
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);
+app.get('/u/:shortURL', (req, res) => {
+  const shortURL = req.params.shortURL;
+  res.redirect(urlDatabase[shortURL]);
 });
 
 app.get('/', (req, res) => {
