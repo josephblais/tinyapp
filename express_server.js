@@ -41,7 +41,11 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  res.redirect(urlDatabase[shortURL]);
+  if (!(shortURL in urlDatabase)) {
+    res.send('Invalid URL');
+  } else {
+    res.redirect(urlDatabase[shortURL]);
+  }
 });
 
 app.get('/', (req, res) => {
