@@ -6,6 +6,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
 
+// eslint-disable-next-line func-names
 const randomStr = function generateRandomString() {
   // from https://attacomsian.com/blog/javascript-generate-random-string
   return Math.random().toString(16).substr(2, 6);
@@ -46,6 +47,13 @@ app.get('/u/:shortURL', (req, res) => {
   } else {
     res.redirect(urlDatabase[shortURL]);
   }
+});
+
+app.post('/urls/:shortURL/delete', (req, res) => {
+  const shortURL = req.params.shortURL;
+  console.log(shortURL);
+  delete urlDatabase[shortURL];
+  res.redirect("/urls");
 });
 
 app.get('/', (req, res) => {
