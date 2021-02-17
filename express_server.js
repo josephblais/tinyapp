@@ -84,12 +84,6 @@ app.post('/urls/:id/delete', (req, res) => {
   delete urlDatabase[shortURL];
   res.redirect('/urls');
 });
-
-// app.post('/login', (req, res) => {
-  //   const username = req.body.username;
-  //   res.cookie('username', username);
-  //   res.redirect('/urls');
-  // });
   
 app.get('/login', (req, res) => {
   const templateVars = {
@@ -111,7 +105,6 @@ app.post('/login', (req, res) => {
   } else if (users[userID].password !== password) {
     res.status(403).send('Invalid password!');
   }
-  console.log(userID);
   res.cookie('user_id', userID);
   res.redirect('/urls');
 });
