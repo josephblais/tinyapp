@@ -20,7 +20,11 @@ const urlDatabase = {
 };
 
 const users = {
-
+  abcde: {
+    id: "abcde",
+    email: "good@bye.com",
+    password: "abcde"
+  }
 };
 
 app.get("/urls/new", (req, res) => {
@@ -96,12 +100,32 @@ app.get('/register', (req, res) => {
   res.render('register');
 });
 
+const emailExists = (email, userDB) => {
+  for (let user in userDB) {
+    if (userDB[user].email === email) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const emailLookup = (email, userDB) => {
+  for (let user in userDB) {
+    if (userDB[user].email === email) {
+      return user;
+    }
+  }
+};
+
+console.log(emailLookup("good@bye.com", users));
+
 app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(`email: ${email}\npassword: ${password}`);
   if (email === "" || password === "") {
     res.status(400).send('invalid email or password. Try again!');
+  } else if (emailExists(email, users)) {
+    res.status(400).send('email already exists. Try logging in.');
   } else {
     const userID = randomStr();
     users[userID] = {
@@ -109,6 +133,7 @@ app.post('/register', (req, res) => {
       email: email,
       password: password
     };
+    console.log(users);
     res.cookie('user_id', userID);
     res.redirect('/urls');
   }
