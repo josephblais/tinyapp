@@ -85,12 +85,22 @@ app.post('/urls/:id/delete', (req, res) => {
   res.redirect('/urls');
 });
 
-app.post('/login', (req, res) => {
-  const username = req.body.username;
-  res.cookie('username', username);
-  res.redirect('/urls');
+// app.post('/login', (req, res) => {
+  //   const username = req.body.username;
+  //   res.cookie('username', username);
+  //   res.redirect('/urls');
+  // });
+  
+app.get('/login', (req, res) => {
+  res.render('login');
 });
 
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  res.redirect('/urls');
+  });
+  
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
   res.redirect('/urls');
@@ -117,8 +127,6 @@ const emailLookup = (email, userDB) => {
   }
 };
 
-console.log(emailLookup("good@bye.com", users));
-
 app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -138,6 +146,7 @@ app.post('/register', (req, res) => {
     res.redirect('/urls');
   }
 });
+
 
 app.get('/', (req, res) => {
   res.send('Hello!!!!');
