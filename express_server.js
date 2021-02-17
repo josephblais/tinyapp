@@ -39,8 +39,8 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.get("/urls/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL;
+app.get("/urls/:id", (req, res) => {
+  const shortURL = req.params.id;
   const templateVars = {
     username: req.cookies.username,
     shortURL: shortURL,
@@ -49,8 +49,8 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.get('/u/:shortURL', (req, res) => {
-  const shortURL = req.params.shortURL;
+app.get('/u/:id', (req, res) => {
+  const shortURL = req.params.id;
   if (!(shortURL in urlDatabase)) {
     res.send('Invalid URL');
   } else {
@@ -58,19 +58,19 @@ app.get('/u/:shortURL', (req, res) => {
   }
 });
 
-app.post('/urls/:shortURL/edit', (req, res) => {
-  const shortURL = req.params.shortURL;
+app.post('/urls/:id/edit', (req, res) => {
+  const shortURL = req.params.id;
   urlDatabase[shortURL] = req.body.newurl;
   res.redirect('/urls');
 });
 
-app.post('/urls/:shortURL/editpage', (req, res) => {
-  const shortURL = req.params.shortURL;
+app.post('/urls/:id/editpage', (req, res) => {
+  const shortURL = req.params.id;
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.post('/urls/:shortURL/delete', (req, res) => {
-  const shortURL = req.params.shortURL;
+app.post('/urls/:id/delete', (req, res) => {
+  const shortURL = req.params.id;
   delete urlDatabase[shortURL];
   res.redirect('/urls');
 });
