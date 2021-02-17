@@ -97,15 +97,21 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const userID = randomStr();
-  users[userID] = {
-    id: userID,
-    email: req.body.email,
-    password: req.body.password
-  };
-  res.cookie('user_id', userID);
-  console.log(users);
-  res.redirect('/urls');
+  const email = req.body.email;
+  const password = req.body.password;
+  console.log(`email: ${email}\npassword: ${password}`);
+  if (email === "" || password === "") {
+    res.status(400).send('invalid email or password. Try again!');
+  } else {
+    const userID = randomStr();
+    users[userID] = {
+      id: userID,
+      email: email,
+      password: password
+    };
+    res.cookie('user_id', userID);
+    res.redirect('/urls');
+  }
 });
 
 app.get('/', (req, res) => {
