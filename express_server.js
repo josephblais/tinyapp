@@ -19,6 +19,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+
+};
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -83,6 +87,22 @@ app.post('/login', (req, res) => {
 
 app.post('/logout', (req, res) => {
   res.clearCookie('username');
+  res.redirect('/urls');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.post('/register', (req, res) => {
+  const userID = randomStr();
+  users[userID] = {
+    id: userID,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_id', userID);
+  console.log(users);
   res.redirect('/urls');
 });
 

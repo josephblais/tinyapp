@@ -8,22 +8,20 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+      </div>
+        <div class="ml-auto">
         <% if (!username) {%>
-          <div class="float-right">
             <form method="POST" action="/login">
               <input type="text" name="username">
               <button type="submit" class="btn btn-light btn-sm">LOG IN</button>
             </form>
-          </div>
         <% } else { %>
-          <div class="float-right">
+          <p>Logged in as: <%= username %></p>
           <form method="POST" action="/logout">
             <button type="submit" class="btn btn-light btn-sm">LOGOUT</button>
           </form>
-          <p>Logged in as: <%= username %></p>
-          </div>
           <% } %>
-      </div>
+        </div>
     </div>
   </nav>
 </header>
