@@ -107,7 +107,9 @@ app.post('/login', (req, res) => {
   const password = req.body.password;
   const userID = emailLookup(email, users);
   if (userID === false) {
-    res.status(403).send("Email not found! Try registering instead.");
+    res.status(403).send('Email not found! Try registering instead.');
+  } else if (users[userID].password !== password) {
+    res.status(403).send('Invalid password!');
   }
   console.log(userID);
   res.cookie('user_id', userID);
