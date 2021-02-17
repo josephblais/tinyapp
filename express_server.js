@@ -29,8 +29,9 @@ app.get("/urls/new", (req, res) => {
 
 app.get('/urls', (req, res) => {
   const templateVars = {
-    username: req.cookies.username,
-    urls: urlDatabase
+    userID: req.cookies.user_id,
+    urls: urlDatabase,
+    users: users
   };
   res.render('urls_index', templateVars);
 });
@@ -46,7 +47,8 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
   const templateVars = {
-    username: req.cookies.username,
+    userID: req.cookies.user_id,
+    users: users,
     shortURL: shortURL,
     longURL: urlDatabase[shortURL]
   };
