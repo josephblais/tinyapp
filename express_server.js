@@ -135,10 +135,12 @@ const emailLookup = (email, userDB) => {
 app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  if (email === "" || password === "") {
-    res.status(400).send('invalid email or password. Try again!');
+  if (email === "") {
+    res.status(400).send('Empty email. Try again!');
+  } else if (password === "") {
+    res.status(400).send('Invalid password. Try again!');
   } else if (emailLookup(email, users) !== false) {
-    res.status(400).send('email already exists. Try logging in.');
+    res.status(400).send('Email already exists. Try logging in.');
   } else {
     const userID = randomStr();
     users[userID] = {
