@@ -92,14 +92,19 @@ app.post('/urls/:id/delete', (req, res) => {
   // });
   
 app.get('/login', (req, res) => {
-  res.render('login');
+  const templateVars = {
+    userID: req.cookies.user_id,
+  };
+  res.render('login', templateVars);
 });
 
 app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const userID = emailLookup(email, users);
+  res.cookie('user_id', userID);
   res.redirect('/urls');
-  });
+});
   
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
@@ -107,7 +112,10 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('register');
+  const templateVars = {
+    userID: req.cookies.user_id,
+  };
+  res.render('register', templateVars);
 });
 
 const emailExists = (email, userDB) => {
