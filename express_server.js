@@ -98,10 +98,18 @@ app.get('/login', (req, res) => {
   res.render('login', templateVars);
 });
 
+
+
+// console.log(emailLookup("good@bye.com", users));
+
 app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const userID = emailLookup(email, users);
+  if (userID === false) {
+    res.status(403).send("Email not found! Try registering instead.");
+  }
+  console.log(userID);
   res.cookie('user_id', userID);
   res.redirect('/urls');
 });
@@ -118,14 +126,6 @@ app.get('/register', (req, res) => {
   res.render('register', templateVars);
 });
 
-const emailExists = (email, userDB) => {
-  for (let user in userDB) {
-    if (userDB[user].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
 
 const emailLookup = (email, userDB) => {
   for (let user in userDB) {
@@ -133,14 +133,16 @@ const emailLookup = (email, userDB) => {
       return user;
     }
   }
+  return false;
 };
+
 
 app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   if (email === "" || password === "") {
     res.status(400).send('invalid email or password. Try again!');
-  } else if (emailExists(email, users)) {
+  } else if (emailLookup(email, users) !== false) {
     res.status(400).send('email already exists. Try logging in.');
   } else {
     const userID = randomStr();
