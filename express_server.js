@@ -15,8 +15,8 @@ const randomStr = function generateRandomString() {
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {longURL:"http://www.lighthouselabs.ca", userID: "abcde"},
+  "9sm5xK": {longURL: "http://www.google.com", userID: "v2rbv"}
 };
 
 const users = {
@@ -27,10 +27,32 @@ const users = {
   }
 };
 
+const emailLookup = (email, userDB) => {
+  for (let user in userDB) {
+    if (userDB[user].email === email) {
+      return user;
+    }
+  }
+  return false;
+};
+
+const urlsForUser = (id, database) => {
+  let userURLs = {};
+  for (let url in database) {
+    // console.log(`🥵${database[url].userID}`);
+    if (database[url].userID === id) {
+      userURLs[url] = database[url];
+    }
+  }
+  console.log(`🥶${userURLs}`);
+  return userURLs;
+};
+
 app.get("/urls/new", (req, res) => {
   if (!req.cookies.user_id) {
     res.redirect('/login');
   }
+  
   const templateVars = {
     userID: req.cookies.user_id,
     urls: urlDatabase,
@@ -41,11 +63,14 @@ app.get("/urls/new", (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies.user_id;
+  const validURLs = urlsForUser(userID, urlDatabase);
+  console.log(`Valid URLS: ${validURLs}`);
   const templateVars = {
-    userID: req.cookies.user_id,
-    urls: urlDatabase,
+    userID: userID,
+    urls: validURLs,
     users: users
   };
+  console.log(urlDatabase);
   res.render('urls_index', templateVars);
 });
 
@@ -68,7 +93,7 @@ app.get("/urls/:id", (req, res) => {
     userID: userID,
     users: users,
     shortURL: shortURL,
-    longURL: urlDatabase[shortURL]
+    longURL: urlDatabase[shortURL].longURL
   };
   res.render("urls_show", templateVars);
 });
@@ -132,17 +157,6 @@ app.get('/register', (req, res) => {
   };
   res.render('register', templateVars);
 });
-
-
-const emailLookup = (email, userDB) => {
-  for (let user in userDB) {
-    if (userDB[user].email === email) {
-      return user;
-    }
-  }
-  return false;
-};
-
 
 app.post('/register', (req, res) => {
   const email = req.body.email;
