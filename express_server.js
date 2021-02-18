@@ -86,14 +86,16 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const shortURL = req.params.id;
   const userID = req.cookies.user_id;
-  // const longURL = urlDatabase[shortURL].longURL;
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL].longURL;
+  const validURLs = urlsForUser(userID, urlDatabase);
   const templateVars = {
     userID: userID,
     users: users,
     shortURL: shortURL,
-    longURL: urlDatabase[shortURL].longURL
+    longURL: longURL,
+    validURLs: validURLs
   };
   res.render("urls_show", templateVars);
 });
