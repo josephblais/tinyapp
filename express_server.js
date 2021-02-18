@@ -124,13 +124,20 @@ app.post('/urls/:id/edit', (req, res) => {
 
 app.post('/urls/:id/editpage', (req, res) => {
   const shortURL = req.params.id;
-  res.redirect(`/urls/${shortURL}`);
 });
 
 app.post('/urls/:id/delete', (req, res) => {
-  const shortURL = req.params.id;
-  delete urlDatabase[shortURL];
   res.redirect('/urls');
+  
+  const shortURL = req.params.id;
+  const validURLs = urlsForUser(userID, urlDatabase);
+  
+  if (validURLs[userID]) {
+    delete urlDatabase[shortURL];
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    res.status(403).send("You don't have permission to edit this URL!");
+  }
 });
   
 app.get('/login', (req, res) => {
