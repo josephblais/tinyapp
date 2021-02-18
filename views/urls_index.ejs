@@ -13,10 +13,12 @@
     <main style="margin: 1em;">
       <%- include('partials/_header') %>
       <% if (!userID) { %>
+      <div class="container align-center text-center">
       <h3>Uh-oh!</h3>
       <p>You aren't logged in! Please <a href="/login">login</a> or <a href="/register">register</a> to see all these amazing short URLs.</p>
       <button type="button" onclick="window.location.href='/login'" class="btn btn-primary">LOGIN</button>
       <button type="button" onclick="window.location.href='/register'" class="btn btn-primary">REGISTER</button>
+      </div>
       <% } else { %>
 
       <h3>My URLs</h3>
