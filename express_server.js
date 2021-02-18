@@ -28,7 +28,15 @@ const users = {
 };
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  if (!req.cookies.user_id) {
+    res.redirect('/login');
+  }
+  const templateVars = {
+    userID: req.cookies.user_id,
+    urls: urlDatabase,
+    users: users
+  };
+  res.render("urls_new", templateVars);
 });
 
 app.get('/urls', (req, res) => {
