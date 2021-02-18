@@ -38,13 +38,12 @@ const emailLookup = (email, userDB) => {
 
 const urlsForUser = (id, database) => {
   let userURLs = {};
+  console.log(database);
   for (let url in database) {
-    // console.log(`🥵${database[url].userID}`);
     if (database[url].userID === id) {
       userURLs[url] = database[url];
     }
   }
-  console.log(`🥶${userURLs}`);
   return userURLs;
 };
 
@@ -64,13 +63,11 @@ app.get("/urls/new", (req, res) => {
 app.get('/urls', (req, res) => {
   const userID = req.cookies.user_id;
   const validURLs = urlsForUser(userID, urlDatabase);
-  console.log(`Valid URLS: ${validURLs}`);
   const templateVars = {
     userID: userID,
     urls: validURLs,
     users: users
   };
-  console.log(urlDatabase);
   res.render('urls_index', templateVars);
 });
 
@@ -102,10 +99,13 @@ app.get("/urls/:id", (req, res) => {
 
 app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
+  console.log('Short URL:', shortURL);
+  console.log('urlDatabase: ', urlDatabase)
+  console.log('urlDatabase[shortURL]: ',urlDatabase[shortURL]);
   if (!(shortURL in urlDatabase)) {
     res.send('Invalid URL');
   } else {
-    res.redirect(urlDatabase[shortURL]);
+    res.redirect(urlDatabase[shortURL].longURL);
   }
 });
 
@@ -114,7 +114,7 @@ app.post('/urls/:id/edit', (req, res) => {
   const shortURL = req.params.id;
   const validURLs = urlsForUser(userID, urlDatabase);
 
-  if (validURLs[userID]) {
+  if (validURLs[shortURL] && validURLs[shortURL].userID === userID) {
     urlDatabase[shortURL] = req.body.newurl;
     res.redirect('/urls');
   } else {
@@ -123,7 +123,15 @@ app.post('/urls/:id/edit', (req, res) => {
 });
 
 app.post('/urls/:id/editpage', (req, res) => {
+  const userID = req.cookies.user_id;
   const shortURL = req.params.id;
+  const validURLs = urlsForUser(userID, urlDatabase);
+
+  if (validURLs[shortURL] && validURLs[shortURL].userID === userID) {
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    res.status(403).send("You don't have permission to edit this URL!");
+  }
 });
 
 app.post('/urls/:id/delete', (req, res) => {
@@ -131,13 +139,14 @@ app.post('/urls/:id/delete', (req, res) => {
   const shortURL = req.params.id;
   const validURLs = urlsForUser(userID, urlDatabase);
   
-  if (validURLs[userID]) {
+  if (validURLs[shortURL] && validURLs[shortURL].userID === userID) {
     delete urlDatabase[shortURL];
-    res.redirect(`/urls/${shortURL}`);
+    res.redirect('/urls');
   } else {
-    res.status(403).send("You don't have permission to edit this URL!");
+    res.status(403).send("You don't have permission to delete this URL!");
   }
 });
+
   
 app.get('/login', (req, res) => {
   const templateVars = {
@@ -189,7 +198,6 @@ app.post('/register', (req, res) => {
       email: email,
       password: password
     };
-    console.log(users);
     res.cookie('user_id', userID);
     res.redirect('/urls');
   }
