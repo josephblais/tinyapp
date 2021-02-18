@@ -127,8 +127,7 @@ app.post('/urls/:id/editpage', (req, res) => {
 });
 
 app.post('/urls/:id/delete', (req, res) => {
-  res.redirect('/urls');
-  
+  const userID = req.cookies.user_id;
   const shortURL = req.params.id;
   const validURLs = urlsForUser(userID, urlDatabase);
   
