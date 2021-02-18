@@ -49,20 +49,26 @@ app.get('/urls', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
   const shortURL = randomStr();
-  urlDatabase[shortURL] = req.body.longURL;
+  const longURL = req.body.longURL;
+  const userID = req.cookies.user_id;
+  urlDatabase[shortURL] = {
+    longURL,
+    userID
+  };
+  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
+  const userID = req.cookies.user_id;
+  const longURL = urlDatabase[shortURL].longURL;
   const templateVars = {
-    userID: req.cookies.user_id,
-    users: users,
-    shortURL: shortURL,
-    longURL: urlDatabase[shortURL]
+    userID,
+    users,
+    shortURL,
+    longURL
   };
   res.render("urls_show", templateVars);
 });
