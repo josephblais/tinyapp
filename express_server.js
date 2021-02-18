@@ -102,9 +102,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
-  console.log('Short URL:', shortURL);
-  console.log('urlDatabase: ', urlDatabase)
-  console.log('urlDatabase[shortURL]: ',urlDatabase[shortURL]);
+
   if (!(shortURL in urlDatabase)) {
     res.send('Invalid URL');
   } else {
@@ -163,9 +161,9 @@ app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const userID = emailLookup(email, users);
-  if (userID === false) {
+  if (!userID) {
     res.status(403).send('Email not found! Try registering instead.');
-  } else if (users[userID].password !== password) {
+  } else if (!bcrypt.compareSync(password, users[userID].password)) {
     res.status(403).send('Invalid password!');
   }
   res.cookie('user_id', userID);
