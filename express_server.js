@@ -40,6 +40,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
+  const userID = req.cookies.user_id;
   const templateVars = {
     userID: req.cookies.user_id,
     urls: urlDatabase,
@@ -56,19 +57,18 @@ app.post("/urls", (req, res) => {
     longURL,
     userID
   };
-  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
   const userID = req.cookies.user_id;
-  const longURL = urlDatabase[shortURL].longURL;
+  // const longURL = urlDatabase[shortURL].longURL;
   const templateVars = {
-    userID,
-    users,
-    shortURL,
-    longURL
+    userID: userID,
+    users: users,
+    shortURL: shortURL,
+    longURL: urlDatabase[shortURL]
   };
   res.render("urls_show", templateVars);
 });
@@ -102,13 +102,10 @@ app.post('/urls/:id/delete', (req, res) => {
 app.get('/login', (req, res) => {
   const templateVars = {
     userID: req.cookies.user_id,
+    users: users
   };
   res.render('login', templateVars);
 });
-
-
-
-// console.log(emailLookup("good@bye.com", users));
 
 app.post('/login', (req, res) => {
   const email = req.body.email;
@@ -131,6 +128,7 @@ app.post('/logout', (req, res) => {
 app.get('/register', (req, res) => {
   const templateVars = {
     userID: req.cookies.user_id,
+    users: users
   };
   res.render('register', templateVars);
 });
