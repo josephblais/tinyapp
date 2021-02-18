@@ -1,4 +1,5 @@
 const express = require('express');
+const { getUserByEmail, urlsForUser } = require('./helpers');
 const app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
@@ -33,25 +34,7 @@ const users = {
   }
 };
 
-const emailLookup = (email, userDB) => {
-  for (let user in userDB) {
-    if (userDB[user].email === email) {
-      return user;
-    }
-  }
-  return false;
-};
 
-const urlsForUser = (id, database) => {
-  let userURLs = {};
-  // console.log(database);
-  for (let url in database) {
-    if (database[url].userID === id) {
-      userURLs[url] = database[url];
-    }
-  }
-  return userURLs;
-};
 
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
@@ -164,7 +147,7 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const userID = emailLookup(email, users);
+  const userID = getUserByEmail(email, users);
   if (!userID) {
     res.status(403).send('Email not found! Try registering instead.');
   } else if (!bcrypt.compareSync(password, users[userID].password)) {
@@ -196,7 +179,7 @@ app.post('/register', (req, res) => {
     res.status(400).send('Empty email. Try again!');
   } else if (password === "") {
     res.status(400).send('Invalid password. Try again!');
-  } else if (emailLookup(email, users) !== false) {
+  } else if (getUserByEmail(email, users) !== false) {
     res.status(400).send('Email already exists. Try logging in.');
   } else {
     const userID = randomStr();
