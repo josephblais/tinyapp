@@ -110,9 +110,16 @@ app.get('/u/:id', (req, res) => {
 });
 
 app.post('/urls/:id/edit', (req, res) => {
+  const userID = req.cookies.user_id;
   const shortURL = req.params.id;
-  urlDatabase[shortURL] = req.body.newurl;
-  res.redirect('/urls');
+  const validURLs = urlsForUser(userID, urlDatabase);
+
+  if (validURLs[userID]) {
+    urlDatabase[shortURL] = req.body.newurl;
+    res.redirect('/urls');
+  } else {
+    res.status(403).send("You don't have permission to edit this URL!");
+  }
 });
 
 app.post('/urls/:id/editpage', (req, res) => {
