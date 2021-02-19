@@ -15,8 +15,6 @@ app.use(cookieSession({
 
 app.set('view engine', 'ejs');
 
-// eslint-disable-next-line func-names
-
 
 const urlDatabase = {
   "b2xVn2": {longURL:"http://www.lighthouselabs.ca", userID: "abcde"},
@@ -31,9 +29,15 @@ const users = {
   }
 };
 
+app.get('/', (req, res) => {
+  if (req.session.user_id) {
+    res.redirect('/urls');
+  } else {
+    res.redirect('/login');
+  }
+});
 
-
-app.get("/urls/new", (req, res) => {
+app.get('/urls/new', (req, res) => {
   if (!req.session.user_id) {
     res.redirect('/login');
   }
@@ -43,7 +47,7 @@ app.get("/urls/new", (req, res) => {
     urls: urlDatabase,
     users: users
   };
-  res.render("urls_new", templateVars);
+  res.render('urls_new', templateVars);
 });
 
 app.get('/urls', (req, res) => {
@@ -57,7 +61,7 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-app.post("/urls", (req, res) => {
+app.post('/urls', (req, res) => {
   const shortURL = randomStr();
   const longURL = req.body.longURL;
   const userID = req.session.user_id;
@@ -68,7 +72,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.get("/urls/:id", (req, res) => {
+app.get('/urls/:id', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = req.params.id;
 
@@ -84,7 +88,7 @@ app.get("/urls/:id", (req, res) => {
       longURL: longURL,
       validURLs: validURLs
     };
-    res.render("urls_show", templateVars);
+    res.render('urls_show', templateVars);
   }
 });
 
@@ -197,15 +201,6 @@ app.post('/register', (req, res) => {
     };
     req.session['user_id'] = userID;
     res.redirect('/urls');
-  }
-});
-
-
-app.get('/', (req, res) => {
-  if (req.session.user_id) {
-    res.redirect('/urls');
-  } else {
-    res.redirect('/login');
   }
 });
 
