@@ -20,9 +20,9 @@
       <button type="button" onclick="window.location.href='/register'" class="btn btn-primary">REGISTER</button>
       </div>
       <% } else { %>
-
-      <h3>My URLs</h3>
-      <table class="table">
+      <div class="container justify-content-center mt-3">
+      <h3 class="text-center">My URLs</h3>
+      <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">Short URL</th>
@@ -48,8 +48,9 @@
           <% } %>
         </tbody>
       </table>
-      <p>Don't like these URLs? Make your own short URL <a href="/urls/new">here</a>!</p>
+      <p class="text-center">Don't like these URLs? Make your own short URL <a href="/urls/new">here</a>!</p>
       <% } %>
+    </div>
     </main>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

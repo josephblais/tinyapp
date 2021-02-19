@@ -77,8 +77,8 @@ app.get('/urls/:id', (req, res) => {
   const shortURL = req.params.id;
 
   if (!urlDatabase[shortURL]) {
-    res.status(404).redirect('url_error');
-  } else {
+    res.status(404).render('url_error', {userID, users});
+  }  else {
     const longURL = urlDatabase[shortURL].longURL;
     const validURLs = urlsForUser(userID, urlDatabase);
     const templateVars = {
@@ -92,17 +92,12 @@ app.get('/urls/:id', (req, res) => {
   }
 });
 
-app.get('/urls/url_error', (req, res) => {
-  // 👹👹👹👹👹👹👹👹👹👹
-  const userID = req.session.user_id;
-  res.render('url_error', userID);
-});
-
 app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
-
+  const userID = req.session.user_id;
+  
   if (!(shortURL in urlDatabase)) {
-    res.send('Invalid URL');
+    res.status(404).render('url_error', {userID, users});
   } else {
     res.redirect(urlDatabase[shortURL].longURL);
   }
@@ -147,7 +142,6 @@ app.post('/urls/:id/delete', (req, res) => {
   }
 });
 
-  
 app.get('/login', (req, res) => {
   const templateVars = {
     userID: req.session.user_id,
