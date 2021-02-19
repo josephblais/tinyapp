@@ -5,6 +5,7 @@ const PORT = 8080;
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const e = require('express');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -74,16 +75,27 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   const userID = req.session.user_id;
   const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL].longURL;
-  const validURLs = urlsForUser(userID, urlDatabase);
-  const templateVars = {
-    userID: userID,
-    users: users,
-    shortURL: shortURL,
-    longURL: longURL,
-    validURLs: validURLs
-  };
-  res.render("urls_show", templateVars);
+
+  if (!urlDatabase[shortURL]) {
+    res.status(404).redirect('url_error');
+  } else {
+    const longURL = urlDatabase[shortURL].longURL;
+    const validURLs = urlsForUser(userID, urlDatabase);
+    const templateVars = {
+      userID: userID,
+      users: users,
+      shortURL: shortURL,
+      longURL: longURL,
+      validURLs: validURLs
+    };
+    res.render("urls_show", templateVars);
+  }
+});
+
+app.get('/urls/url_error', (req, res) => {
+  // 👹👹👹👹👹👹👹👹👹👹
+  const userID = req.session.user_id;
+  res.render('url_error', userID);
 });
 
 app.get('/u/:id', (req, res) => {
@@ -96,7 +108,7 @@ app.get('/u/:id', (req, res) => {
   }
 });
 
-app.post('/urls/:id/edit', (req, res) => {
+app.post('/urls/:id', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = req.params.id;
   const validURLs = urlsForUser(userID, urlDatabase);
@@ -153,7 +165,6 @@ app.post('/login', (req, res) => {
   } else if (!bcrypt.compareSync(password, users[userID].password)) {
     res.status(403).send('Invalid password!');
   }
-  // res.cookie('user_id', userID);
   req.session['user_id'] = userID;
   res.redirect('/urls');
 });
@@ -195,7 +206,11 @@ app.post('/register', (req, res) => {
 
 
 app.get('/', (req, res) => {
-  res.send('Hello!!!!');
+  if (req.session.user_id) {
+    res.redirect('/urls');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.get('/urls.json', (req, res) => {
