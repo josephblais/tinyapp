@@ -5,16 +5,16 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav mr-auto">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-      <div class="navbar-nav ml-auto">
+      <div class="navbar-nav">
         <% if (!userID) {%>
           <a class="nav-item nav-link" href="./register">Register</a>
-          <a class="nav-item nav-link" href="./login">Login</a> 
+          <a class="nav-item nav-link" href="./login">Login</a>
         <% } else { %>
-          <p class="nav-item nav-link">Logged in as: <%= users[userID].email %></p>
+          <span class="navbar-text">Logged in as: <%= users[userID].email %></span>
           <form method="POST" action="/logout" class="nav-item nav-link">
             <button type="submit" class="btn btn-light btn-sm">LOGOUT</button>
           </form>
