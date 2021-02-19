@@ -18,4 +18,9 @@ const urlsForUser = (id, database) => {
   return userURLs;
 };
 
-module.exports = { getUserByEmail, urlsForUser };
+const randomStr = () => {
+  // from https://attacomsian.com/blog/javascript-generate-random-string
+  return Math.random().toString(16).substr(2, 6);
+};
+
+module.exports = { getUserByEmail, urlsForUser, randomStr };

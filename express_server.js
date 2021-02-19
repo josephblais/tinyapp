@@ -1,11 +1,10 @@
 const express = require('express');
-const { getUserByEmail, urlsForUser } = require('./helpers');
+const { getUserByEmail, urlsForUser, randomStr } = require('./helpers');
 const app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
-const e = require('express');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -17,10 +16,7 @@ app.use(cookieSession({
 app.set('view engine', 'ejs');
 
 // eslint-disable-next-line func-names
-const randomStr = function generateRandomString() {
-  // from https://attacomsian.com/blog/javascript-generate-random-string
-  return Math.random().toString(16).substr(2, 6);
-};
+
 
 const urlDatabase = {
   "b2xVn2": {longURL:"http://www.lighthouselabs.ca", userID: "abcde"},
